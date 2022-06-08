@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'email_verified_at',
     ];
 
     /**
@@ -41,4 +44,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function requests_sent()
+    {
+        return $this->hasMany(Request::class, 'initiator_id');
+    }
+
+    public function requests_received()
+    {
+        return $this->hasMany(Request::class, 'target_id');
+    }
+
+    public function connections(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_connections', 'user_id', 'connection_id');
+    }
+
 }

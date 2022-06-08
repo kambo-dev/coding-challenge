@@ -3507,7 +3507,7 @@ textarea.form-control-lg {
 .collapsing {
   height: 0;
   overflow: hidden;
-  transition: height 0s ease;
+  transition: height 0.35s ease;
 }
 @media (prefers-reduced-motion: reduce) {
   .collapsing {
@@ -11285,4 +11285,13 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+}
+.spinner-border-md {
+  width: 4rem;
+  height: 4rem;
+}
+
+.spinner-border-lg {
+  width: 6rem;
+  height: 6rem;
 }

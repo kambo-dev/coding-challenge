@@ -9,9 +9,9 @@ function ajaxForm(formItems) {
 
 
 /**
- * 
+ *
  * @param {*} url route
- * @param {*} method POST or GET 
+ * @param {*} method POST or GET
  * @param {*} functionsOnSuccess Array of functions that should be called after ajax
  * @param {*} form for POST request
  */
@@ -35,8 +35,8 @@ function ajax(url, method, functionsOnSuccess, form) {
     type: method,
     async: true,
     data: form,
-    processData: false,
-    contentType: false,
+    // processData: false,
+    // contentType: false,
     dataType: 'json',
     error: function(xhr, textStatus, error) {
       console.log(xhr.responseText);
@@ -45,13 +45,18 @@ function ajax(url, method, functionsOnSuccess, form) {
       console.log(error);
     },
     success: function(response) {
-      for (var j = 0; j < functionsOnSuccess.length; j++) {
-        for (var i = 0; i < functionsOnSuccess[j][1].length; i++) {
-          if (functionsOnSuccess[j][1][i] == "response") {
-            functionsOnSuccess[j][1][i] = response;
+      if (typeof functionsOnSuccess === "function") {
+          functionsOnSuccess(response);
+      } else {
+
+          for (var j = 0; j < functionsOnSuccess.length; j++) {
+              for (var i = 0; i < functionsOnSuccess[j][1].length; i++) {
+                  if (functionsOnSuccess[j][1][i] == "response") {
+                      functionsOnSuccess[j][1][i] = response;
+                  }
+              }
+              functionsOnSuccess[j][0].apply(this, functionsOnSuccess[j][1]);
           }
-        }
-        functionsOnSuccess[j][0].apply(this, functionsOnSuccess[j][1]);
       }
     }
   });
@@ -70,7 +75,7 @@ function exampleUseOfAjaxFunction(exampleVariable) {
     [exampleOnSuccessFunction, [exampleVariable, 'response']]
   ];
 
-  // POST 
+  // POST
   ajax('/example_route', 'POST', functionsOnSuccess, form);
 
   // GET
